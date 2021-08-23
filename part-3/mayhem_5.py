@@ -150,6 +150,14 @@ async def handle_message(msg):
     """
     event = asyncio.Event()
     asyncio.create_task(extend(msg, event))
+
+    # NOTE:
+    #
+    # This cleanup can also be considered an 'on_finished'
+    # function, it waits for the event we created to
+    # be .set(). You can use the msg.extended_cnt to
+    # implement retry logic  --nkmg1c
+
     asyncio.create_task(cleanup(msg, event))
 
     results = await asyncio.gather(
