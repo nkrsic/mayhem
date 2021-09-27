@@ -174,6 +174,7 @@ async def consume(queue):
         queue (asyncio.Queue): Queue from which to consume messages.
     """
     while True:
+        print(f"About to 'await' queue.get() inside consumer ..")
         msg = await queue.get()
         # commenting out to not interfer with the faked exceptions in
         # `restart_host` and `save`
@@ -219,8 +220,12 @@ def main():
     loop.set_exception_handler(handle_exception)
     queue = asyncio.Queue()
 
+    # three_publishers = [publish(queue) for i in range(3)]
+    # [loop.create_task(publisher) for publisher in three_publishers]
+
     try:
         loop.create_task(publish(queue))
+        loop.create_task(consume(queue))
         loop.create_task(consume(queue))
         loop.run_forever()
     finally:
